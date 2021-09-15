@@ -48,15 +48,24 @@ export PATH=$PATH:/home/cameron.local/bin
 echo $PATH
 
 #install etcher
-echo "deb https://deb.etcher.io stable etcher" | sudo tee /etc/apt/sources.list.d/balena-etcher.list
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 379CE192D401AB61
-echo"sudo apt update -y"
+#echo "deb https://deb.etcher.io stable etcher" | sudo tee /etc/apt/sources.list.d/balena-etcher.list
+##sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 379CE192D401AB61
+#echo"sudo apt update -y"
+#sudo apt update -y
+#curl -1sLf \
+##   'https://dl.cloudsmith.io/public/balena/etcher/setup.deb.sh' \
+#   | sudo -E bash
+#echo"sudo apt install balena-etcher-electron -y"
+#sudo apt install balena-etcher-electron -y
+
+#install VsCodium
 sudo apt update -y
-curl -1sLf \
-   'https://dl.cloudsmith.io/public/balena/etcher/setup.deb.sh' \
-   | sudo -E bash
-echo"sudo apt install balena-etcher-electron -y"
-sudo apt install balena-etcher-electron -y
+sudo apt upgrade -y
+sudo apt install apt-transport-https -y
+wget -qO - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg | gpg --dearmor | sudo dd of=/etc/apt/trusted.gpg.d/vscodium.gpg
+echo 'deb https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/debs/ vscodium main' | sudo tee --append /etc/apt/sources.list.d/vscodium.list
+sudo apt update -y
+sudo apt install codium -y
 
 #set up grub for 'loud splash'
 # /etc/default/grub
@@ -64,8 +73,11 @@ sudo apt install balena-etcher-electron -y
 # delete quite splash
 
 # set up Programs dir
-cd
-mkdir Programs
+echo"mkdir -p ~/Programs"
+mkdir -p ~/Programs
+
+#update/autoremove
+sudo apt update -y && sudo apt autoremove -y
 
 #Change login screen from purple to image
 echo"sudo apt install libglib2.0-dev-bin"
