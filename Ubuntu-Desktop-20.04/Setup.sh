@@ -52,6 +52,9 @@ echo "deb https://deb.etcher.io stable etcher" | sudo tee /etc/apt/sources.list.
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 379CE192D401AB61
 echo"sudo apt update -y"
 sudo apt update -y
+curl -1sLf \
+   'https://dl.cloudsmith.io/public/balena/etcher/setup.deb.sh' \
+   | sudo -E bash
 echo"sudo apt install balena-etcher-electron -y"
 sudo apt install balena-etcher-electron -y
 
