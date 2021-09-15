@@ -11,6 +11,9 @@ sudo apt install gnome-tweak-tool -y
 sudo apt install gparted -y
 sudo apt install transmission -y
 
+#copy over wallpapers
+cp -r Wallpapers/ ~/Pictures/
+
 # remove firefox
 sudp apt remove firefox -y
 
