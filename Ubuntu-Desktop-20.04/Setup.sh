@@ -17,7 +17,7 @@ sudp apt remove firefox -y
 #Install chrome
 sudo apt install gdebi-core wget
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-sudo gdebi google-chrome-stable_current_amd64.deb
+sudo gdebi google-chrome-stable_current_amd64.deb -y
 google-chrome
 
 #install bpytop
@@ -49,3 +49,4 @@ git clone https://github.com/thiggy01/gdm-background.git
 cd gdm-background
 make
 sudo make install
+gdm-background
