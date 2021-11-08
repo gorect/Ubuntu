@@ -42,7 +42,7 @@ cp -r Wallpapers/ ~/Pictures/
 echo "sudo apt-get install -y macfanctld"
 sudo apt-get install -y macfanctld
 sudo systemctl start mbpfanctld.service
-sudo mv macfanctld.conf /etc/macfanctl.conf
+sudo mv macfanctl.conf /etc/macfanctl.conf
 sudo systemctl enable mbpfanctld.service
 sudo systemctl start mbpfanctld.service
 
