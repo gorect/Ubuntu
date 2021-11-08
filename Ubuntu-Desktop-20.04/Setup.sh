@@ -9,16 +9,30 @@ echo"sudo apt install git -y"
 sudo apt install git -y
 echo"sudo apt install wget -y"
 sudo apt install wget -y
+echo "sudo apt install curl -y"
+sudo apt install curl -y
 echo"sudo apt install make -y"
 sudo apt install make -y
 echo"sudo apt install gcc -y"
 sudo apt install gcc -y
+echo"sudo apt install htop -y"
+sudo apt install htop
+echo "sudo apt install neofetch -y"
+sudo apt install neofetch -y
+echo "sudo apt install lm-sensors -y"
+sudo apt install lm-sensors -y
+echo "sudo apt install flatpak -y"
+sudo apt install flatpak -y
 echo"sudo apt install gnome-tweak-tool -y"
 sudo apt install gnome-tweak-tool -y
 echo"sudo apt install gparted -y"
 sudo apt install gparted -y
 echo"sudo apt install transmission -y"
 sudo apt install transmission -y
+echo "sudo apt install compton -y"
+sudo apt install compton -y
+echo "sudo apt install alacritty -y"
+sudo apt install alacritty -y
 
 #copy over wallpapers
 echo"cp -r Wallpapers/ ~/Pictures/"
@@ -52,7 +66,8 @@ echo $PATH
 ##sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 379CE192D401AB61
 #echo"sudo apt update -y"
 #sudo apt update -y
-#curl -1sLf \
+#
+-1sLf \
 ##   'https://dl.cloudsmith.io/public/balena/etcher/setup.deb.sh' \
 #   | sudo -E bash
 #echo"sudo apt install balena-etcher-electron -y"
