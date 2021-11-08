@@ -38,6 +38,10 @@ sudo apt install alacritty -y
 echo"cp -r Wallpapers/ ~/Pictures/"
 cp -r Wallpapers/ ~/Pictures/
 
+#Install MacFanCTL
+echo "sudo apt-get install -y macfanctld"
+sudo apt-get install -y macfanctld
+
 # remove firefox
 echo"sudp apt remove firefox -y"
 sudp apt remove firefox -y
