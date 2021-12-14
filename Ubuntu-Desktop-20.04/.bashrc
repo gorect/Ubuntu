@@ -91,7 +91,7 @@ fi
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
-alias upall='sudo apt update -y && sudo apt upgrade -y && sudo apt dist-upgrade -y && sudo apt autoremove -y && sudo apt clean -y'
+alias upall='sudo apt update -y && sudo apt upgrade -y && sudo apt dist-upgrade -y && sudo snap refresh && sudo apt autoremove -y && sudo apt clean -y'
 alias apt-unlock='sudo service packagekit restart'
 alias sr='sudo reboot'
 
