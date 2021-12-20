@@ -38,14 +38,6 @@ sudo apt install alacritty -y
 echo"cp -r Wallpapers/ ~/Pictures/"
 cp -r Wallpapers/ ~/Pictures/
 
-#Install MacFanCTL
-echo "sudo apt-get install -y macfanctld"
-sudo apt-get install -y macfanctld
-sudo systemctl start mbpfanctld.service
-sudo mv macfanctl.conf /etc/macfanctl.conf
-sudo systemctl enable mbpfanctld.service
-sudo systemctl start mbpfanctld.service
-
 # remove firefox
 echo"sudp apt remove firefox -y"
 sudp apt remove firefox -y
@@ -75,7 +67,7 @@ echo $PATH
 #echo"sudo apt update -y"
 #sudo apt update -y
 #
--1sLf \
+#-1sLf \
 ##   'https://dl.cloudsmith.io/public/balena/etcher/setup.deb.sh' \
 #   | sudo -E bash
 #echo"sudo apt install balena-etcher-electron -y"
@@ -96,8 +88,8 @@ sudo apt install codium -y
 # delete quite splash
 
 # set up Programs dir
-echo"mkdir -p ~/Programs"
-mkdir -p ~/Programs
+#echo"mkdir -p ~/Programs"
+#mkdir -p ~/Programs
 
 #update/autoremove
 sudo apt update -y && sudo apt autoremove -y
