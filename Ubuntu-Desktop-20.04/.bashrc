@@ -94,6 +94,7 @@ alias l='ls -CF'
 alias upall='sudo apt update -y && sudo apt upgrade -y && sudo apt dist-upgrade -y && sudo snap refresh && sudo apt autoremove -y && sudo apt clean -y'
 alias apt-unlock='sudo service packagekit restart'
 alias sr='sudo reboot'
+alias ssn='sudo shutdown now'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
