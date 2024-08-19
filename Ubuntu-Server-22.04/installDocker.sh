@@ -30,7 +30,8 @@ DockerInstall() {
     read -p 'For '"$USER"' to run docker commands without 'sudo' please log out and log back in again.'
 }
 
-#Checking for Docker installation
+#Begin Main
+    #Checking for Docker installation
 if ! type -P docker &> /dev/null; then
 	Err 0 "Dependency 'docker' not found."
     read -p 'Would you like to install docker? [Y/N/Q] ? '
