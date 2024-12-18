@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+.  /#!/usr/bin/env bash
 echo "sudo apt update -y && sudo apt dist-upgrade -y"
 sudo apt update -y && sudo apt dist-upgrade -y
 
