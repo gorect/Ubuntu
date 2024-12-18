@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 
 # This is the commands to backup all possible keyboard shortcut file locations.
