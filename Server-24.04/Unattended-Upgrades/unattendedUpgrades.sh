@@ -11,7 +11,7 @@ CONFIG_50="${SCRIPT_DIR}/50unattended-upgrades"
 if [[ -f "$CONFIG_20" && -f "$CONFIG_50" ]]; then
     echo "Both config files exist."
     sudo apt update && sudo apt upgrade -y
-    sudo apt install unattended-upgraded
+    sudo apt install unattended-upgrades
     #sudo systemctl status unattended-upgrades 
     #add check for enabled and running. 
     sudo dpkg-reconfigure -plow unattended-upgrades
