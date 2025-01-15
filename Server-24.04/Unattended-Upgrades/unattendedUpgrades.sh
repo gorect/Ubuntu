@@ -10,10 +10,13 @@ CONFIG_50="${SCRIPT_DIR}/50unattended-upgrades"
 # Use the config files
 if [[ -f "$CONFIG_20" && -f "$CONFIG_50" ]]; then
     echo "Both config files exist."
+    echo "sudo apt update && sudo apt upgrade -y"
     sudo apt update && sudo apt upgrade -y
+    echo "sudo apt install unattended-upgrades"
     sudo apt install unattended-upgrades
     #sudo systemctl status unattended-upgrades 
     #add check for enabled and running. 
+    echo "sudo dpkg-reconfigure -plow unattended-upgrades"
     sudo dpkg-reconfigure -plow unattended-upgrades
     echo "Copying $CONFIG_20 and $CONFIG_50"
     cp $CONFIG_20 /etc/apt/apt.conf.d/.
@@ -25,8 +28,8 @@ else
 fi
 
 
-cat /etc/apt/apt.conf.d/20auto-upgrades
+#cat /etc/apt/apt.conf.d/20auto-upgrades
 #add check for 1, 1 file contents 
-cat /etc/apt/apt.conf.d/50unattended-upgrades 
+#cat /etc/apt/apt.conf.d/50unattended-upgrades 
 #add check to pull in corrected version of 50unattended-upgrades 
 sudo systemctl restart unattended-upgrades
