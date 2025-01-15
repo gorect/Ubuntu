@@ -4,5 +4,6 @@
 # Is this a virtual machine?
 #if so, sudo apt install qemu-guest-agent
 
+sudo apt update && sudo apt upgrade -y
 sudo apt install vim wget curl net-tools
 
