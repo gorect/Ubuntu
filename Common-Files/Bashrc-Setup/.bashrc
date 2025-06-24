@@ -96,6 +96,8 @@ alias upa='sudo apt update -y && sudo apt upgrade -y && sudo apt dist-upgrade -y
 alias apt-unlock='sudo service packagekit restart'
 alias sr='sudo reboot'
 alias ssn='sudo shutdown now'
+alias dcup='docker compose up -d'
+alias dcfr='docker compose up -d --force-recreate'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
