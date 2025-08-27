@@ -19,8 +19,8 @@ if [[ -f "$CONFIG_20" && -f "$CONFIG_50" ]]; then
     echo "sudo dpkg-reconfigure -plow unattended-upgrades"
     sudo dpkg-reconfigure -plow unattended-upgrades
     echo "Copying $CONFIG_20 and $CONFIG_50"
-    cp $CONFIG_20 /etc/apt/apt.conf.d/.
-    cp $CONFIG_50 /etc/apt/apt.conf.d/.
+    sudo cp $CONFIG_20 /etc/apt/apt.conf.d/.
+    sudo cp $CONFIG_50 /etc/apt/apt.conf.d/.
 else
     echo "One or both config files are missing!"
     exit 1
