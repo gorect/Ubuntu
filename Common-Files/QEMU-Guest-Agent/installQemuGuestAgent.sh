@@ -1,4 +1,12 @@
 #!/usr/bin/env bash
-sudo apt install qemu-guest-agent -y
-sudo systemctl enable qemu-guest-agent
-sudo systemctl start qemu-guest-agent
+set -e  # Exit if any command fails
+
+# Install QEMU Guest Agent
+echo "Installing QEMU Guest Agent..."
+sudo apt update -qq
+sudo apt install -y qemu-guest-agent
+
+# Enable and start the service
+echo "Enabling and starting QEMU Guest Agent..."
+sudo systemctl enable --now qemu-guest-agent
+echo "QEMU Guest Agent installed and running successfully!"
