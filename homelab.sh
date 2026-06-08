@@ -3,6 +3,7 @@
 set -e
 
 DRY_RUN=0
+RUN_RESULTS=()
 
 EXCLUDED_MODULES=(
     common
@@ -55,45 +56,64 @@ run_module() {
     local check_fn="check_${module}"
     local apply_fn="apply_${module}"
 
+    echo "----------------------------------"
+    echo "Module: $module"
+    echo "----------------------------------"
+
+    # -------------------------
+    # DRY RUN MODE
+    # -------------------------
     if [[ "$DRY_RUN" -eq 1 ]]; then
-        echo "[DRY RUN] ${module}"
+        echo "[DRY RUN] $module"
 
         if declare -f "$check_fn" >/dev/null; then
-            if "$check_fn"; then
-                echo "  Status: already configured"
+            if "$check_fn" >/dev/null 2>&1; then
+                echo "Status: already configured"
             else
-                echo "  Status: needs installation/configuration"
+                echo "Status: would be installed/applied"
             fi
         else
-            echo "  (no preflight check available)"
+            echo "Status: no check function"
         fi
 
         return 0
     fi
 
+    # -------------------------
+    # REAL RUN MODE
+    # -------------------------
+
+    # Step 1: check if already done
     if declare -f "$check_fn" >/dev/null; then
         if "$check_fn" >/dev/null 2>&1; then
-            log "${module} already configured"
+            log "${module}: SKIP (already satisfied)"
             mark_done "$module"
             return 0
         fi
     fi
 
+    # Step 2: apply
     if declare -f "$apply_fn" >/dev/null; then
+        log "${module}: APPLY"
         "$apply_fn"
+    else
+        echo "[ERROR] Missing function: $apply_fn"
+        return 1
+    fi
 
-        if declare -f "$check_fn" >/dev/null; then
-            if "$check_fn" >/dev/null 2>&1; then
-                mark_done "$module"
-                log "${module} setup complete"
-            else
-                echo "[ERROR] ${module} failed verification"
-                return 1
-            fi
+    # Step 3: verify after apply
+    if declare -f "$check_fn" >/dev/null; then
+        if "$check_fn" >/dev/null 2>&1; then
+            mark_done "$module"
+            log "${module}: OK"
+        else
+            echo "[ERROR] $module failed verification"
+            return 1
         fi
     else
-        echo "[ERROR] Missing function: ${apply_fn}"
-        return 1
+        # fallback if no check exists
+        mark_done "$module"
+        log "$module marked complete (no verification available)"
     fi
 }
 
@@ -104,9 +124,10 @@ install_base() {
     # run_module prereqs
 
     run_module qemu
+    run_module prereqs
     run_module tailscale
-
-    # run_module unattended
+    run_module bashrc
+    run_module unattended
 }
 
 install_docker_host() {
@@ -115,11 +136,10 @@ install_docker_host() {
 }
 
 install_ai_server() {
-    install_docker_host
+    install_base
+    run_module docker
+    run_module scaletail_ai
 
-    # Leave commented until converted
-    # run_module go
-    # run_module xcaddy
 }
 
 echo "What are you setting up?"

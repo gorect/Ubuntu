@@ -1,8 +1,25 @@
 #!/usr/bin/env bash
 
-#set user check for VM
-# Is this a virtual machine?
-#if so, sudo apt install qemu-guest-agent
+MODULE="prereqs"
 
-sudo apt update && sudo apt upgrade -y
-sudo apt install vim wget curl net-tools cifs-utils gedit iputils-ping
+check_prereqs() {
+    command -v curl >/dev/null 2>&1 &&
+    command -v git >/dev/null 2>&1
+}
+
+apply_prereqs() {
+    log "Installing prerequisites"
+
+    apt-get update -y
+
+    apt-get install -y \
+        curl \
+        git \
+        wget \
+        vim \
+        htop \
+        net-tools \
+	cifs-utils \
+	gedit \
+	iputils-ping
+}

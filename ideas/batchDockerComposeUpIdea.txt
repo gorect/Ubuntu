@@ -1,0 +1,78 @@
+sudo nano /usr/local/bin/docker-stacks-status
+-------------------------------
+
+#!/bin/bash
+
+BASE="/opt/docker"
+
+echo "Docker Stacks Status"
+echo "===================="
+echo
+
+TOTAL=0
+UP=0
+
+for d in "$BASE"/*/; do
+  [ -d "$d" ] || continue
+  [ -f "$d/compose.yml" ] || continue
+
+  STACK=$(basename "$d")
+  TOTAL=$((TOTAL + 1))
+
+  echo "Stack: $STACK"
+  echo "Path:  $d"
+
+  # Get containers for this project (compose labels include project dir name)
+  CONTAINERS=$(docker ps -a --filter "label=com.docker.compose.project=$STACK" --format "{{.Names}}|{{.Status}}|{{.Ports}}")
+
+  if [ -z "$CONTAINERS" ]; then
+    echo "Status: not running"
+    echo
+    continue
+  fi
+
+  STACK_UP=0
+
+  while IFS="|" read -r name status ports; do
+    if echo "$status" | grep -q "Up"; then
+      STACK_UP=1
+    fi
+
+    echo "  Container: $name"
+    echo "  Status:    $status"
+
+    if [ -n "$ports" ]; then
+      echo "  Ports:     $ports"
+    fi
+
+    # Show health if available
+    HEALTH=$(docker inspect --format '{{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}' "$name" 2>/dev/null)
+    if [ "$HEALTH" != "none" ]; then
+      echo "  Health:    $HEALTH"
+    fi
+
+    # Show TSDProxy labels if present
+    LABELS=$(docker inspect --format '{{json .Config.Labels}}' "$name" 2>/dev/null)
+    if echo "$LABELS" | grep -q "tsdproxy"; then
+      echo "  TSDProxy:  enabled"
+    fi
+
+    echo
+  done <<< "$CONTAINERS"
+
+  if [ "$STACK_UP" -eq 1 ]; then
+    UP=$((UP + 1))
+  fi
+
+  echo "----------------------------------------"
+done
+
+echo
+echo "Summary"
+echo "-------"
+echo "Stacks total: $TOTAL"
+echo "Stacks up:    $UP"
+echo "Stacks down:  $((TOTAL - UP))"
+
+---------------------------
+sudo chmod +x /usr/local/bin/docker-stacks-status

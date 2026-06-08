@@ -1,34 +1,22 @@
-#!/usr/bin/env bash 
+#!/usr/bin/env bash
 
-# Create variable to show the current directory of the script. 
-SCRIPT_DIR="$(cd "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+MODULE="unattended"
 
-# Define paths to the two config files
-CONFIG_20="${SCRIPT_DIR}/20auto-upgrades"
-CONFIG_50="${SCRIPT_DIR}/50unattended-upgrades"
+check_unattended() {
+    dpkg -s unattended-upgrades >/dev/null 2>&1
+}
 
-# Use the config files
-if [[ -f "$CONFIG_20" && -f "$CONFIG_50" ]]; then
-    echo "Both config files exist."
-    echo "sudo apt update && sudo apt upgrade -y"
-    sudo apt update && sudo apt upgrade -y
-    echo "sudo apt install unattended-upgrades"
-    sudo apt install unattended-upgrades
-    #sudo systemctl status unattended-upgrades 
-    #add check for enabled and running. 
-    echo "sudo dpkg-reconfigure -plow unattended-upgrades"
-    sudo dpkg-reconfigure -plow unattended-upgrades
-    echo "Copying $CONFIG_20 and $CONFIG_50"
-    sudo cp $CONFIG_20 /etc/apt/apt.conf.d/.
-    sudo cp $CONFIG_50 /etc/apt/apt.conf.d/.
-else
-    echo "One or both config files are missing!"
-    exit 1
-fi
+apply_unattended() {
+    log "Installing unattended-upgrades"
 
+    apt-get update -y
+    apt-get install -y unattended-upgrades
 
-#cat /etc/apt/apt.conf.d/20auto-upgrades
-#add check for 1, 1 file contents 
-#cat /etc/apt/apt.conf.d/50unattended-upgrades 
-#add check to pull in corrected version of 50unattended-upgrades 
-sudo systemctl restart unattended-upgrades
+    install -m 644 \
+        "$BASE_DIR/templates/unattended-upgrades/20auto-upgrades" \
+        /etc/apt/apt.conf.d/20auto-upgrades
+
+    install -m 644 \
+        "$BASE_DIR/templates/unattended-upgrades/50unattended-upgrades" \
+        /etc/apt/apt.conf.d/50unattended-upgrades
+}
