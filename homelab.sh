@@ -18,7 +18,8 @@ for arg in "$@"; do
     esac
 done
 
-BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+#BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 source "$BASE_DIR/modules/common.sh"
 source "$BASE_DIR/modules/state.sh"
