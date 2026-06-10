@@ -3,23 +3,21 @@
 MODULE="prereqs"
 
 check_prereqs() {
-    command -v curl >/dev/null 2>&1 &&
-    command -v git >/dev/null 2>&1
-}
+    local pkg
 
-apply_prereqs() {
-    log "Installing prerequisites"
-
-    apt-get update -y
-
-    apt-get install -y \
+    for pkg in \
         curl \
         git \
         wget \
         vim \
         htop \
         net-tools \
-	cifs-utils \
-	gedit \
-	iputils-ping
+        cifs-utils \
+        gedit \
+        iputils-ping
+    do
+        dpkg -s "$pkg" >/dev/null 2>&1 || return 1
+    done
+
+    return 0
 }

@@ -3,7 +3,7 @@
 MODULE="qemu"
 
 check_qemu() {
-    systemctl is-enabled qemu-guest-agent >/dev/null 2>&1 &&
+    dpkg -s qemu-guest-agent >/dev/null 2>&1 &&
     systemctl is-active qemu-guest-agent >/dev/null 2>&1
 }
 
@@ -13,7 +13,7 @@ apply_qemu() {
     apt-get update -qq
     apt-get install -y qemu-guest-agent
 
-    systemctl enable --now qemu-guest-agent
+    systemctl start qemu-guest-agent
 
     log "QEMU Guest Agent installed successfully"
 }
