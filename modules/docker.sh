@@ -4,13 +4,22 @@
 MODULE="docker"
 
 check_docker() {
-    if command -v docker >/dev/null 2>&1; then
-        echo "docker already installed"
-        return 0
-    else
+    if ! command -v docker >/dev/null 2>&1; then
         echo "docker not installed"
         return 1
     fi
+
+    local target_user="${SUDO_USER:-$USER}"
+
+    if [[ -n "$target_user" && "$target_user" != "root" ]]; then
+        if ! id -nG "$target_user" | grep -qw docker; then
+            echo "docker installed, but $target_user is not in the docker group"
+            return 1
+        fi
+    fi
+
+    echo "docker already installed and configured"
+    return 0
 }
 
 apply_docker() {
