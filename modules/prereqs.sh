@@ -21,3 +21,17 @@ check_prereqs() {
 
     return 0
 }
+apply_prereqs() {
+    apt-get update -y
+
+    apt-get install -y \
+        curl \
+        git \
+        wget \
+        vim \
+        htop \
+        net-tools \
+        cifs-utils \
+        gedit \
+        iputils-ping
+}
