@@ -27,6 +27,7 @@ list_state() {
     local modules=(
         prereqs
         docker
+        dockhand_hawser_update
         tailscale
         qemu
         ansible

@@ -45,6 +45,7 @@ sudo ./homelab.sh --dry-run
 | `bashrc` | Deploys the repo's `.bashrc` template |
 | `unattended` | Installs and configures `unattended-upgrades` |
 | `docker` | Installs Docker and verifies the invoking user is in the `docker` group |
+| `dockhand_hawser_update` | Installs a daily 04:00 cron job that does `down` → `pull` → `up -d --force-recreate` for the Dockhand and Hawser stacks, with logrotate for its log |
 | `scaletail_ai` | Deploys the ScaleTail (Ollama + Open WebUI) Docker stack |
 | `common` / `state` | Shared helpers — root check, OS check, logging, and state tracking (excluded from the module menu) |
 

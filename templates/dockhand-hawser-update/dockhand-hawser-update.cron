@@ -1,0 +1,5 @@
+# Managed by homelab.sh (module: dockhand_hawser_update)
+# Daily at 04:00. flock prevents overlapping runs.
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+0 4 * * * root /usr/bin/flock -n /tmp/dockhand-hawser-update.lock /opt/docker/update-dockhand-hawser.sh >> /var/log/dockhand-hawser-update.log 2>&1

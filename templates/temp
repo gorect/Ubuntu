@@ -1,0 +1,103 @@
+cat > templates/dockhand-hawser-update/update-dockhand-hawser.sh <<'EOF'
+#!/usr/bin/env bash
+# Managed by homelab.sh (module: dockhand_hawser_update). Edits here will be overwritten
+# on the next provisioning run - change templates/dockhand-hawser-update/ in the repo instead.
+set -u
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# Compose project directories to refresh (the stacks that can't update themselves)
+DIRS=(
+  "/opt/docker/dockhand"
+  "/opt/docker/hawser"
+)
+
+for dir in "${DIRS[@]}"; do
+  echo "=== $(date '+%F %T') Updating $dir ==="
+
+  if [[ ! -d "$dir" ]]; then
+    echo "Skipping: $dir does not exist"
+    continue
+  fi
+
+  cd "$dir" || { echo "Cannot cd to $dir"; continue; }
+
+  docker compose down \
+    && docker compose pull \
+    && docker compose up -d --force-recreate \
+    || echo "FAILED: $dir"
+done
+
+# Clean up old images left behind by the pulls
+docker image prune -f
+EOF
+
+# --- Cron template ---
+cat > templates/dockhand-hawser-update/dockhand-hawser-update.cron <<'EOF'
+# Managed by homelab.sh (module: dockhand_hawser_update)
+# Daily at 04:00. flock prevents overlapping runs.
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+0 4 * * * root /usr/bin/flock -n /tmp/dockhand-hawser-update.lock /opt/docker/update-dockhand-hawser.sh >> /var/log/dockhand-hawser-update.log 2>&1
+EOF
+
+# --- Logrotate template ---
+cat > templates/dockhand-hawser-update/dockhand-hawser-update.logrotate <<'EOF'
+/var/log/dockhand-hawser-update.log {
+    weekly
+    rotate 4
+    compress
+    missingok
+    notifempty
+}
+EOF
+
+# --- The module ---
+cat > modules/dockhand_hawser_update.sh <<'EOF'
+#!/usr/bin/env bash
+
+MODULE="dockhand_hawser_update"
+
+AU_TEMPLATE_DIR="$BASE_DIR/templates/dockhand-hawser-update"
+AU_SCRIPT="/opt/docker/update-dockhand-hawser.sh"
+AU_CRON="/etc/cron.d/dockhand-hawser-update"        # no dots in the name or cron ignores it
+AU_LOGROTATE="/etc/logrotate.d/dockhand-hawser-update"
+
+# -------------------------
+# CHECK
+# -------------------------
+check_dockhand_hawser_update() {
+    cmp -s "$AU_TEMPLATE_DIR/update-dockhand-hawser.sh"       "$AU_SCRIPT" &&
+    cmp -s "$AU_TEMPLATE_DIR/dockhand-hawser-update.cron"      "$AU_CRON" &&
+    cmp -s "$AU_TEMPLATE_DIR/dockhand-hawser-update.logrotate" "$AU_LOGROTATE"
+}
+
+# -------------------------
+# APPLY
+# -------------------------
+apply_dockhand_hawser_update() {
+    if ! command -v docker >/dev/null 2>&1; then
+        echo "[ERROR] docker is not installed - run the docker module first"
+        return 1
+    fi
+
+    log "Installing Dockhand/Hawser update script, cron job, and logrotate config"
+
+    install -d -m 755 "$(dirname "$AU_SCRIPT")"
+    install -m 755 "$AU_TEMPLATE_DIR/update-dockhand-hawser.sh"       "$AU_SCRIPT"
+    install -m 644 "$AU_TEMPLATE_DIR/dockhand-hawser-update.cron"      "$AU_CRON"
+    install -m 644 "$AU_TEMPLATE_DIR/dockhand-hawser-update.logrotate" "$AU_LOGROTATE"
+
+    log "Daily update scheduled for 04:00 (log: /var/log/dockhand-hawser-update.log)"
+}
+EOF
+
+chmod +x modules/dockhand_hawser_update.sh templates/dockhand-hawser-update/update-dockhand-hawser.sh
+
+# --- Wire into homelab.sh (adds the module after "run_module docker" in the Docker host and AI server profiles) ---
+sed -i 's/^    run_module docker$/&\n    run_module dockhand_hawser_update/' homelab.sh
+
+# --- Add to the "Show state" list ---
+sed -i 's/^        docker$/&\n        dockhand_hawser_update/' modules/state.sh
+
+# --- README table row (optional but nice) ---
+sed -i '/^| `scaletail_ai` |/i | `dockhand_hawser_update` | Installs a daily 04:00 cron job that does `down` → `pull` → `up -d --force-recreate` for the Dockhand and Hawser stacks, with logrotate for its log |' README.md

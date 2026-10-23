@@ -134,11 +134,13 @@ install_base() {
 install_docker_host() {
     install_base
     run_module docker
+    run_module dockhand_hawser_update
 }
 
 install_ai_server() {
     install_base
     run_module docker
+    run_module dockhand_hawser_update
     run_module scaletail_ai
 
 }
